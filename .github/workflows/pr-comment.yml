@@ -6,14 +6,24 @@ jobs:
     name: PR comment workflow
     if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
+
     steps:
-      - name: Capture triggering branch name
-        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
-      - name: Comment contains trigger
-        uses: promiseofcake/circleci-trigger-action@v1
-        if: contains(github.event.comment.body, 'typescript-report')
+      - uses: actions/checkout@master
+      - name: Use Node 14.16.1
+        uses: actions/setup-node@v1
         with:
-          user-token: ${{ secrets.CIRCLECI_TOKEN }}
-          project-slug: adobe/react-spectrum
-          branch: ${{ env.BRANCH_NAME }}
-          payload: '{"run_output_workflow": true}'
+          node_version: 14.16.1
+      - name: install
+        run: yarn install
+      - name: Configure CI Git User
+        run: |
+          git remote rm origin
+          git remote add origin "https://github-actions:$GITHUB_TOKEN@github.com/adobe/react-spectrum.git"
+          git fetch
+          git config --global user.email octobot@github.com
+          git config --global user.name GitHub Actions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Diff TS
+        run: |
+          yarn check-apis
