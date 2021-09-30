@@ -7,10 +7,13 @@ jobs:
     if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - name: Capture triggering branch name
+        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
       - name: Comment contains trigger
-        uses: './.github/workflows/actions/'
+        uses: promiseofcake/circleci-trigger-action@v1
         if: contains(github.event.comment.body, 'typescript-report')
         with:
-          token: ${{ secrets.CIRCLE_CI_TOKEN }}
-          who-to-greet: 'Me'
+          user-token: ${{ secrets.CIRCLECI_TOKEN }}
+          project-slug: promiseofcake/circleci-trigger-action
+          branch: ${{ env.BRANCH_NAME }}
+          payload: '{"run_output_workflow": true}'
