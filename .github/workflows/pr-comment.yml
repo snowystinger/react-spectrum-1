@@ -14,6 +14,6 @@ jobs:
         if: contains(github.event.comment.body, 'typescript-report')
         with:
           user-token: ${{ secrets.CIRCLECI_TOKEN }}
-          project-slug: promiseofcake/circleci-trigger-action
+          project-slug: adobe/react-spectrum
           branch: ${{ env.BRANCH_NAME }}
           payload: '{"run_output_workflow": true}'
