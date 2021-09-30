@@ -7,10 +7,11 @@ jobs:
     if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
-      - name: What is the comment
-        run: |
-          echo "Comment on PR #${{ github.event.comment.body }}"
       - name: Comment contains trigger
+        uses: './.github/actions/'
         if: contains(github.event.comment.body, 'typescript-report')
         run: |
           echo "Comment on PR #${{ github.event.issue.number }}"
+        with:
+          token: ${{ secrets.CIRCLE_CI_TOKEN }}
+          who-to-greet: 'Me'
