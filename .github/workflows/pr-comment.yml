@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Comment contains trigger
-        uses: './.github/actions/'
+        uses: './.github/workflow/actions/'
         if: contains(github.event.comment.body, 'typescript-report')
         with:
           token: ${{ secrets.CIRCLE_CI_TOKEN }}
